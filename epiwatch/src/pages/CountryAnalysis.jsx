@@ -275,6 +275,7 @@ export default function CountryAnalysis() {
   const [forecastData, setForecastData] = useState([]);
   const [simChartData, setSimChartData] = useState([]);
   const [hospitalLoadData, setHospitalLoadData] = useState(null);
+  const [search, setSearch] = useState("");
 
   const mortalityData = useMemo(() => 
     MORTALITY_DATA[selectedCountry] || MORTALITY_DATA.india,
@@ -461,12 +462,23 @@ export default function CountryAnalysis() {
 
           {/* 2. COUNTRY SELECTOR */}
           <div className="relative w-max">
+          <input
+  type="text"
+  placeholder="Search country..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  className="w-full mb-2 px-4 py-2 rounded-lg border"
+/>
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
               className="appearance-none bg-white dark:bg-[#0f172a] border border-slate-300 dark:border-slate-600/50 text-slate-900 dark:text-white px-[14px] py-[10px] pr-10 rounded-[10px] min-w-[280px] outline-none font-medium focus:border-slate-200/60 transition-colors duration-200 cursor-pointer"
             >
-              {Object.entries(COUNTRY_STATIC).map(([key, data]) => (
+             {Object.entries(COUNTRY_STATIC)
+  .filter(([key, data]) =>
+    data.name.toLowerCase().includes(search.toLowerCase())
+  )
+  .map(([key, data]) => (
                 <option key={key} value={key}>{data.name}</option>
               ))}
             </select>
