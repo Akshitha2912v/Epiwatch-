@@ -222,17 +222,24 @@ export default function RiskMap() {
         <h2 className="text-[16px] font-medium text-slate-800 dark:text-slate-100 m-0">Interactive risk overlay</h2>
         
         <div style={{ height: '500px', width: '100%' }} className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700/50 relative z-0">
-          <MapContainer 
-            center={[20, 0]} 
-            zoom={2} 
-            style={{ height: '100%', width: '100%', backgroundColor: '#f8fafc' }}
-            scrollWheelZoom={true}
-          >
+        <MapContainer 
+  center={[20, 0]} 
+  zoom={2}
+  style={{ height: '100%', width: '100%', backgroundColor: '#f8fafc' }}
+  scrollWheelZoom={true}
+  maxBounds={[
+    [-90, -180],
+    [90, 180]
+  ]}
+  maxBoundsViscosity={1.0}
+  worldCopyJump={false}
+>
             <ChangeView center={mapCenter} zoom={mapZoom} />
-            <TileLayer
-              attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            />
+         <TileLayer
+  attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+  url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+  noWrap={true}
+/>
             {regions.map((region) => (
               <CircleMarker
                 key={region.id}
@@ -267,7 +274,6 @@ export default function RiskMap() {
           </MapContainer>
         </div>
       </div>
-
       {/* 4. MINI STATS ROW */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
