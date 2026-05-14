@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlobalLoadingBar, SkeletonCard, SkeletonMap, SkeletonTable } from '../components/Skeleton';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
@@ -107,6 +107,17 @@ export default function RiskMap() {
   const [loading, setLoading] = useState(true);
   const [mapCenter, setMapCenter] = useState([20, 0]);
   const [mapZoom, setMapZoom] = useState(2);
+
+  const tableRef = useRef(null);
+
+  const scrollTable = (direction) => {
+  if (tableRef.current) {
+    tableRef.current.scrollBy({
+      left: direction === 'left' ? -300 : 300,
+      behavior: 'smooth'
+    });
+  }
+};
 
   useEffect(() => {
     const handleDemoZoom = (e) => {
@@ -305,8 +316,34 @@ export default function RiskMap() {
           <h2 className="text-[16px] font-medium text-slate-900 dark:text-white m-0">Regional risk breakdown</h2>
         </div>
         
-        <div className="w-full overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <div className="relative">
+<div className="flex justify-end gap-2 mb-3">
+  <button
+    onClick={() => {
+      tableRef.current.scrollLeft -= 300;
+    }}
+    className="px-3 py-1 rounded bg-slate-200 dark:bg-slate-700 text-sm"
+  >
+    ←
+  </button>
+
+  <button
+    onClick={() => {
+      tableRef.current.scrollLeft += 300;
+    }}
+    className="px-3 py-1 rounded bg-slate-200 dark:bg-slate-700 text-sm"
+  >
+    →
+  </button>
+</div>
+
+<div
+  ref={tableRef}
+  className="w-full overflow-x-auto"
+  style={{ scrollBehavior: 'smooth' }}
+>
+
+<table className="min-w-[1400px] text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-200 dark:border-slate-700/50 text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider bg-white dark:bg-[#0f172a]">
                 <th className="p-4 font-semibold">#</th>
@@ -355,6 +392,7 @@ export default function RiskMap() {
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </motion.div>
         )}
